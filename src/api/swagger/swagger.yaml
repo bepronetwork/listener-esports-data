@@ -1,0 +1,134 @@
+swagger: "2.0"
+info:
+  version: "0.3.6"
+  title: BetProtocol API
+# during dev, should point to your local machine
+host: localhost:8080
+# basePath prefixes all resource paths 
+basePath: /api
+# 
+
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+  - application/x-www-form-urlencoded
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /hello/world :
+    x-swagger-router-controller: hello
+    post:
+      tags:
+      - hello
+      summary: Example Method
+      operationId: helloWorld
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: hello
+          description: Example Method
+          required: true
+          schema:
+            $ref: '#/definitions/helloWorldRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /status/post:
+    x-swagger-router-controller: ping
+    post:
+      tags:
+      - ping
+      summary: Test Ping
+      operationId: pingPost
+      description: Test Ping for post.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ping
+          description: Ping Object for test
+          required: true
+          schema:
+            $ref: '#/definitions/PingPost'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  helloWorldRequest :
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type : string
+        format: name
+        example: "wertwertwertwert"
+        description: |
+          Name Example
+  GeneralResponse : 
+    type: object
+    required:
+      - data
+      - meta
+    properties:
+      data:
+        type : object
+        format: data
+        description: |
+          Unique identifier of the user, besides the ID
+      meta:
+        type : object
+        format: meta
+        description: |
+          User Real Name
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  PingPost:
+    type: object
+    required :
+      - type
+    properties:
+      type:
+        type : string
+        example: "24234g234g23g"
+        minLength: 1
+        description: |
+          Type Auth
+      app:
+        type : string
+        example: "24234g234g23g"
+        description: |
+          APP ID
