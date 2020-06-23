@@ -7,7 +7,7 @@ export const PORT = process.env.PORT;
 
 export const ENV = process.env.ENV;
 
-export const CLOUDAMQP_URL =  process.env.CLOUDAMQP_URL || "amqp://localhost:5672";
+export const CLOUDAMQP_URL = `amqp://${encodeURIComponent(process.env.PANDA_EMAIL)}:${process.env.PANDA_TOKEN}@${process.env.PANDA_HOST}:${process.env.PANDA_PORT}/odds%2F${process.env.PANDA_COMPANY_ID}`;
 
 export const DB_USER =  process.env.DB_USER;
 

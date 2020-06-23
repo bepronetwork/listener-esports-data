@@ -17,13 +17,15 @@ class App {
     startRabbit(){
         this.__init__().then(()=>{
             const Controllers = require('./api/controllers');
-            for(let indexController in Controllers) {
-                for(let indexSubController in  Controllers[indexController]){
-                    queue.consume(indexSubController, async message => {
-                        await (Controllers[indexController])[indexSubController](JSON.parse(message.content.toString()));
-                    })
-                }
-            }
+            queue.consume("beat", async message => {
+                console.log(message);
+            });
+            queue.consume("fixture", async message => {
+                console.log(message);
+            });
+            queue.consume("markets", async message => {
+                console.log(message);
+            });
         });
     }
 
