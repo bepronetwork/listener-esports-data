@@ -17,14 +17,19 @@ class App {
     startRabbit(){
         this.__init__().then(()=>{
             const Controllers = require('./api/controllers');
-            queue.consume("beat", async message => {
-                console.log(message);
-            });
-            queue.consume("fixture", async message => {
-                console.log(message);
-            });
-            queue.consume("markets", async message => {
-                console.log(message);
+            queue.consume("my_queue", async message => {
+                const options = JSON.parse(message.content.toString());
+                switch (options.event_type) {
+                    case 'match': {
+                        Controllers.esport.matchESport(options);
+                        break;
+                    }
+                    case 'game':{
+                        Controllers.esport.matchESport(options);
+                        break;
+                    }
+                }
+                // console.log(message.content.toString());
             });
         });
     }

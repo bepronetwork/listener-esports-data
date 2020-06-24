@@ -1,6 +1,9 @@
+const axios = require('axios').default;
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
+import { SerieRepository, VideogameRepository, MatchRepository } from '../db/repos';
+import { Serie } from '../models';
 let error = new ErrorManager();
 
 
@@ -37,9 +40,36 @@ const processActions = {
 const progressActions = {
 	__register : async (params) => {
 		try{
-            let Match = await self.save(params);
+			if(!params.match_id) {return;}
+			const result = (await axios.get(`https://api.pandascore.co/matches/${params.match_id}?token=wYwfdN96aghYf05IrYKI3Lu54vtUBphAaX4wKp9Iq0W9VnBoGR0`)).data;
+
+			const serie_external_id 		= result.serie_id;
+			const videogame_external_id 	= result.videogame.id;
+			let serie_id 					= (await SerieRepository.prototype.getByIdExternal(serie_external_id));
+			serie_id = (!serie_id) ? null : serie_id._id;
+			let videogame_id 				= (await VideogameRepository.prototype.getByIdExternal(videogame_external_id));
+			videogame_id = (!videogame_id) ? null : videogame_id._id;
+			const match 					= await MatchRepository.prototype.getByIdExternal(result.id);
+			if(match) {console.log("aqui1");return;}
+			if(!videogame_id) {console.log("aqui2");return};
+			if(!serie_id) {
+				await (new Serie({
+					external_id		: serie_external_id,
+					videogame_id	: videogame_external_id,
+					videogame 		:videogame_id
+				})).register();
+				serie_id = (await SerieRepository.prototype.getByIdExternal(serie_external_id))._id;
+			}
+			let matchToSalve = await self.save({
+				external_id   : result.id,
+				serie_id      : serie_external_id,
+				videogame_id  : videogame_external_id,
+				serie         : serie_id,
+				videogame 	  : videogame_id
+			});
+			console.log("End");
 			return {
-				...Match,
+				...matchToSalve,
 				type : 'match'
 			};
 		}catch(err){

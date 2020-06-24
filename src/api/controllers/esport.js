@@ -1,4 +1,5 @@
 import MiddlewareSingleton from '../helpers/middleware';
+import { Match } from '../../models';
 
 /**
  * Description of the function.
@@ -11,15 +12,15 @@ import MiddlewareSingleton from '../helpers/middleware';
  * @todo Add description of AdminsController
  */
 
-async function helloWorldESport(req, res) {
+async function matchESport(params) {
     try {
-        MiddlewareSingleton.respond(res, req, {});
+        let match = new Match(params);
+        await match.register();
     } catch (err) {
-        MiddlewareSingleton.log({ type: "global", req, code: err.code });
-        MiddlewareSingleton.respondError(res, err);
+        console.log(err);
     }
 }
 
-export {
-    helloWorldESport
+export default {
+    matchESport
 }

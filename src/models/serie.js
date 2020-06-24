@@ -25,8 +25,7 @@ class Serie extends ModelComponent {
 
     async register() {
         try {
-            let res = await this.process('Register');
-            return MapperSerieSingleton.output('Serie', res._doc);
+            return await this.process('Register');
         } catch (err) {
             throw err;
         }

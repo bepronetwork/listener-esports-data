@@ -1,4 +1,5 @@
 import { VideogameSchema } from '../schemas';
+import MongoComponent from './MongoComponent';
 
 /**
  * Accounts database interaction class.
@@ -11,9 +12,10 @@ import { VideogameSchema } from '../schemas';
  * @see Parent: {@link db.repos.accounts}
  */
 
-class VideogameRepository {
+class VideogameRepository extends MongoComponent {
 
     constructor() {
+        super(VideogameSchema);
     }
     /**
      * @function setVideogameModel
@@ -22,11 +24,20 @@ class VideogameRepository {
      */
 
     setModel = (Videogame) => {
-        return VideogameSchema.prototype.schema.model(Videogame)
+        return VideogameRepository.prototype.schema.model(Videogame)
+    }
+    getByIdExternal(external_id){
+        return new Promise((resolve, reject)=>{
+            VideogameRepository.prototype.schema.model.findOne({external_id})
+            .exec((error, res)=>{
+                if(error) reject(error);
+                resolve(res);
+            });
+        });
     }
 }
 
-VideogameSchema.prototype.schema = new VideogameSchema();
+VideogameRepository.prototype.schema = new VideogameSchema();
 
 
 export default VideogameRepository;

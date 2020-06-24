@@ -25,8 +25,8 @@ class Match extends ModelComponent {
 
     async register() {
         try {
-            let res = await this.process('Register');
-            return MapperMatchSingleton.output('Match', res._doc);
+            return await this.process('Register');
+            // return MapperMatchSingleton.output('Match', res);
         } catch (err) {
             throw err;
         }

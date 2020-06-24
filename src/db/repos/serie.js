@@ -1,3 +1,4 @@
+import MongoComponent from './MongoComponent';
 import { SerieSchema } from '../schemas';
 
 /**
@@ -11,9 +12,10 @@ import { SerieSchema } from '../schemas';
  * @see Parent: {@link db.repos.accounts}
  */
 
-class SerieRepository {
+class SerieRepository extends MongoComponent {
 
     constructor() {
+        super(SerieSchema)
     }
     /**
      * @function setSerieModel
@@ -22,11 +24,21 @@ class SerieRepository {
      */
 
     setModel = (Serie) => {
-        return SerieSchema.prototype.schema.model(Serie)
+        return SerieRepository.prototype.schema.model(Serie)
+    }
+
+    getByIdExternal(external_id){
+        return new Promise((resolve, reject)=>{
+            SerieRepository.prototype.schema.model.findOne({external_id})
+            .exec((error, res)=>{
+                if(error) reject(error);
+                resolve(res);
+            });
+        });
     }
 }
 
-SerieSchema.prototype.schema = new SerieSchema();
+SerieRepository.prototype.schema = new SerieSchema();
 
 
 export default SerieRepository;

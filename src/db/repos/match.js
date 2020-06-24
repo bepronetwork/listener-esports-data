@@ -1,3 +1,4 @@
+import MongoComponent from './MongoComponent';
 import { MatchSchema } from '../schemas';
 
 /**
@@ -11,9 +12,10 @@ import { MatchSchema } from '../schemas';
  * @see Parent: {@link db.repos.accounts}
  */
 
-class MatchRepository {
+class MatchRepository extends MongoComponent {
 
     constructor() {
+        super(MatchSchema);
     }
     /**
      * @function setMatchModel
@@ -22,11 +24,20 @@ class MatchRepository {
      */
 
     setModel = (Match) => {
-        return MatchSchema.prototype.schema.model(Match)
+        return MatchRepository.prototype.schema.model(Match)
+    }
+    getByIdExternal(external_id){
+        return new Promise((resolve, reject)=>{
+            MatchRepository.prototype.schema.model.findOne({external_id})
+            .exec((error, res)=>{
+                if(error) reject(error);
+                resolve(res);
+            });
+        });
     }
 }
 
-MatchSchema.prototype.schema = new MatchSchema();
+MatchRepository.prototype.schema = new MatchSchema();
 
 
 export default MatchRepository;

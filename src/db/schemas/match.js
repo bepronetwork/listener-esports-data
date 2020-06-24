@@ -11,9 +11,7 @@ MatchSchema.prototype.schema = {
     serie_id      : {  type: Number, required : true},
     videogame_id  : {  type: Number, required : true},
     serie         : { type: mongoose.Schema.Types.ObjectId, ref: 'Serie'},
-    videogame     : { type: mongoose.Schema.Types.ObjectId, ref: 'Videogame'},
-    name          : {  type: String, required : true},
-    slug          : {  type: String, required : true}
+    videogame     : { type: mongoose.Schema.Types.ObjectId, ref: 'Videogame'}
 }
 
 MatchSchema.prototype.model = db.model(MatchSchema.prototype.name, new db.Schema(MatchSchema.prototype.schema));
