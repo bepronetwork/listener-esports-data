@@ -1,5 +1,6 @@
 import { globals } from './Globals';
 import { Logger } from './helpers/logger';
+import { QueueSingleton } from './logic/queue/queue';
 require('dotenv').config();
 const express = require('express')
 const app = express()
@@ -21,15 +22,15 @@ class App {
                 const options = JSON.parse(message.content.toString());
                 switch (options.event_type) {
                     case 'match': {
-                        Controllers.esport.matchESport(options);
+                        QueueSingleton.pushQueue({func:Controllers.esport.matchESport, params: options});
                         break;
                     }
                     case 'game':{
-                        Controllers.esport.matchESport(options);
+                        QueueSingleton.pushQueue({func:Controllers.esport.matchESport, params: options});
                         break;
                     }
                 }
-                // console.log(message.content.toString());
+                QueueSingleton.callQueue();
             });
         });
     }
