@@ -4,6 +4,7 @@ import LogicComponent from './logicComponent';
 import _ from 'lodash';
 import { SerieRepository, VideogameRepository, MatchRepository } from '../db/repos';
 import { Serie } from '../models';
+import { IOSingleton } from './utils/io';
 let error = new ErrorManager();
 
 
@@ -40,18 +41,21 @@ const processActions = {
 const progressActions = {
 	__register : async (params) => {
 		try{
+			// Request PandaScore
 			if(!params.match_id) {return;}
 			const result = (await axios.get(`https://api.pandascore.co/matches/${params.match_id}?token=wYwfdN96aghYf05IrYKI3Lu54vtUBphAaX4wKp9Iq0W9VnBoGR0`)).data;
-
+			// Get Attributes
 			const serie_external_id 		= result.serie_id;
 			const videogame_external_id 	= result.videogame.id;
 			let serie_id 					= (await SerieRepository.prototype.getByIdExternal(serie_external_id));
-			serie_id = (!serie_id) ? null : serie_id._id;
+			serie_id 						= (!serie_id) ? null : serie_id._id;
 			let videogame_id 				= (await VideogameRepository.prototype.getByIdExternal(videogame_external_id));
-			videogame_id = (!videogame_id) ? null : videogame_id._id;
+			videogame_id 					= (!videogame_id) ? null : videogame_id._id;
 			const match 					= await MatchRepository.prototype.getByIdExternal(result.id);
-			if(match) {console.log("aqui1");return;}
-			if(!videogame_id) {console.log("aqui2");return};
+			// Neutral Conditions
+			if(match) {return;}
+			if(!videogame_id) {return;}
+			// Save Serie
 			if(!serie_id) {
 				await (new Serie({
 					external_id		: serie_external_id,
@@ -59,7 +63,11 @@ const progressActions = {
 					videogame 		:videogame_id
 				})).register();
 				serie_id = (await SerieRepository.prototype.getByIdExternal(serie_external_id))._id;
+				// Call socket
+				IOSingleton.getIO()
+				.emit("serie", { message: serie_external_id });
 			}
+			// Save match
 			let matchToSalve = await self.save({
 				external_id   : result.id,
 				serie_id      : serie_external_id,
@@ -67,6 +75,9 @@ const progressActions = {
 				serie         : serie_id,
 				videogame 	  : videogame_id
 			});
+			// Call socket
+			IOSingleton.getIO()
+			.emit("match", { message: result.id });
 			console.log("End");
 			return {
 				...matchToSalve,

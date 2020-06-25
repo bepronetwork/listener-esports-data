@@ -1,11 +1,12 @@
 import { globals } from './Globals';
 import { Logger } from './helpers/logger';
 import { QueueSingleton } from './logic/queue/queue';
+import { IOSingleton } from './logic/utils/io';
 require('dotenv').config();
-const express = require('express')
-const app = express()
+const app = require('express')();
 const queue = require("./queue");
-
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
 class App {
 
@@ -34,13 +35,21 @@ class App {
             });
         });
     }
-
     startServe(){
+        IOSingleton.push(io);
         app.get('/', function (req, res) {
             res.send('Welcome')
         });
+
+        io.on('connection', (socket) => {
+            console.log('Socket ON');
+            socket.on("room", (data) => {
+                socket.join(data.roomId);
+            });
+        });
+
         const self = this;
-        app.listen((process.env.PORT),function () {
+        http.listen((process.env.PORT),function () {
             console.log(`Listening on port ${process.env.PORT}!`);
             self.startRabbit();
         });
