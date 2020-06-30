@@ -65,7 +65,7 @@ const progressActions = {
 				serie_id = (await SerieRepository.prototype.getByIdExternal(serie_external_id))._id;
 				// Call socket
 				IOSingleton.getIO()
-				.emit("serie", { message: serie_external_id });
+				.emit("serieUpdate", { message: serie_external_id });
 			}
 			// Save match
 			let matchToSalve = await self.save({
@@ -77,7 +77,7 @@ const progressActions = {
 			});
 			// Call socket
 			IOSingleton.getIO()
-			.emit("match", { message: result.id });
+			.emit("matchUpdate", { message: result.id });
 			console.log("End");
 			return {
 				...matchToSalve,
