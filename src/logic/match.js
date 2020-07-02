@@ -56,6 +56,7 @@ const progressActions = {
 			// Neutral Conditions
 			if(match) {
 				// Call socket
+				await MatchRepository.prototype.updateByExternal(result.id, result.status);
 				IOSingleton.getIO()
 				.emit("matchUpdate", { message: result.id });
 				console.log(result.id);
