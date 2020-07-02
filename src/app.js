@@ -21,9 +21,10 @@ class App {
             const Controllers = require('./api/controllers');
             queue.consume("my_queue", async message => {
                 const options = JSON.parse(message.content.toString());
+                console.log(options);
                 switch (options.event_type) {
                     case 'match': {
-                        QueueSingleton.pushQueue({func:Controllers.esport.matchESport, params: options});
+                        QueueSingleton.pushQueue({func:Controllers.esport.matchESport, params: {...options, match_id: options.event_id}});
                         break;
                     }
                     case 'game':{
