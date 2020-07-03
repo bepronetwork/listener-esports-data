@@ -77,17 +77,22 @@ const progressActions = {
 				IOSingleton.getIO()
 				.emit("serieUpdate", { message: serie_external_id });
 			}
-			// Save match
-			let matchToSalve = await self.save({
-				external_id   	: result.id,
-				serie_id      	: serie_external_id,
-				videogame_id  	: videogame_external_id,
-				serie         	: serie_id,
-				videogame 	  	: videogame_id,
-				market 		    : market.markets,
-				status_external : result.status,
-				game_date 		: (new Date(result.scheduled_at))
-			});
+			let matchToSalve = null;
+			if(market.markets!="pending") {
+				// Save match
+				matchToSalve = await self.save({
+					external_id   	: result.id,
+					serie_id      	: serie_external_id,
+					videogame_id  	: videogame_external_id,
+					serie         	: serie_id,
+					videogame 	  	: videogame_id,
+					market 		    : market.markets,
+					status_external : result.status,
+					game_date 		: (new Date(result.scheduled_at))
+				});
+			}else{
+				return;
+			}
 			// Call socket
 			IOSingleton.getIO()
 			.emit("matchUpdate", { message: result.id });
