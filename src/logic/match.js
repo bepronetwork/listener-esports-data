@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { SerieRepository, VideogameRepository, MatchRepository } from '../db/repos';
 import { Serie } from '../models';
 import { IOSingleton } from './utils/io';
+import { PANDA_TOKEN } from '../config';
 let error = new ErrorManager();
 
 
@@ -43,8 +44,8 @@ const progressActions = {
 		try{
 			// Request PandaScore
 			if(!params.match_id) {return;}
-			const result = (await axios.get(`https://api.pandascore.co/matches/${params.match_id}?token=wYwfdN96aghYf05IrYKI3Lu54vtUBphAaX4wKp9Iq0W9VnBoGR0`)).data;
-			const market = (await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}/markets?token=wYwfdN96aghYf05IrYKI3Lu54vtUBphAaX4wKp9Iq0W9VnBoGR0`)).data;
+			const result = (await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}?token=${PANDA_TOKEN}`)).data;
+			const market = (await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}/markets?token=${PANDA_TOKEN}`)).data;
 			// Get Attributes
 			const serie_external_id 		= result.serie_id;
 			const videogame_external_id 	= result.videogame.id;

@@ -9,6 +9,8 @@ export const ENV = process.env.ENV;
 
 export const CLOUDAMQP_URL = `amqp://${encodeURIComponent(process.env.PANDA_EMAIL)}:${process.env.PANDA_TOKEN}@${process.env.PANDA_HOST}:${process.env.PANDA_PORT}/odds%2F${process.env.PANDA_COMPANY_ID}`;
 
+export const PANDA_TOKEN = process.env.PANDA_TOKEN;
+
 export const DB_USER =  process.env.DB_USER;
 
 export const LIMIT =  process.env.LIMIT || 1;
