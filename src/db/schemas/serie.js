@@ -12,7 +12,7 @@ SerieSchema.prototype.schema = {
     end_at        : {type: Date},
     full_name     : {type: String},
     id            : {type: Number},
-    // league        : {},
+    league        : {type: Object},
     league_id     : {type: Number},
     name          : {type: String},
     season        : {type: String},
