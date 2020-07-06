@@ -17,7 +17,7 @@ SerieSchema.prototype.schema = {
     name          : {type: String},
     season        : {type: String},
     slug          : {type: String},
-    tier          : {type: Number},
+    tier          : {type: String},
     tournaments   : {type: Array},
     // videogame     : {},
     winner_id     : {type: Number},
