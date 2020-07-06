@@ -44,8 +44,9 @@ const progressActions = {
 		try{
 			// Request PandaScore
 			if(!params.match_id) {return;}
-			const result = (await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}?token=${PANDA_TOKEN}`)).data;
-			const market = (await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}/markets?token=${PANDA_TOKEN}`)).data;
+			const result 		= (await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}?token=${PANDA_TOKEN}`)).data;
+			const market 		= (await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}/markets?token=${PANDA_TOKEN}`)).data;
+			const seriesPanda 	= (await axios.get(`https://api.pandascore.co/series/${result.serie_id}?token=${PANDA_TOKEN}`)).data;
 			// Get Attributes
 			const serie_external_id 		= result.serie_id;
 			const videogame_external_id 	= result.videogame.id;
@@ -68,9 +69,10 @@ const progressActions = {
 			// Save Serie
 			if(!serie_id) {
 				await (new Serie({
+					...seriesPanda,
 					external_id		: serie_external_id,
 					videogame_id	: videogame_external_id,
-					videogame 		:videogame_id
+					videogame 		: videogame_id
 				})).register();
 				serie_id = (await SerieRepository.prototype.getByIdExternal(serie_external_id))._id;
 				// Call socket
