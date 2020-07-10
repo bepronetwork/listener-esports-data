@@ -80,7 +80,7 @@ const progressActions = {
 				.emit("serieUpdate", { message: serie_external_id });
 			}
 			let matchToSalve = null;
-			if(market.markets!="pending") {
+			if(result.status!="pending") {
 				// Save match
 				matchToSalve = await self.save({
 					external_id   	: result.id,

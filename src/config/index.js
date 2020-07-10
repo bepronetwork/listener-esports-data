@@ -45,7 +45,9 @@ export const MS_WITHDRAW_URL = process.env.MS_WITHDRAW_URL;
 
 export const MS_MASTER_URL = process.env.MS_MASTER_URL;
 
-export const IS_DEVELOPMENT = ENV == 'production' ? false : true; 
+export const RABBIT_URL_QUEUE_BET = process.env.RABBIT_URL_QUEUE_BET || "amqp://guest:guest@localhost:5672/";
+
+export const IS_DEVELOPMENT = ENV == 'production' ? false : true;
 
 export const FRONTEND_BRANCH = !IS_DEVELOPMENT ? 'master' : 'dev';
 

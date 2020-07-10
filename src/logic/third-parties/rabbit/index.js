@@ -1,4 +1,4 @@
-import { CLOUDAMQP_URL } from '../../../config';
+import { RABBIT_URL_QUEUE_BET } from '../../../config';
 import { Logger } from '../../../helpers/logger';
 
 class workerQueue {
@@ -9,9 +9,9 @@ class workerQueue {
 
     __init__() {
         try{
-            this.__connectInstance = require('amqplib').connect(CLOUDAMQP_URL).then(conn => conn.createChannel());
+            this.__connectInstance = require('amqplib').connect(RABBIT_URL_QUEUE_BET).then(conn => conn.createChannel());
         }catch(err){
-            Logger.error(`Can´t connect with RabbiMQ Jackpot Service ${err}`)
+            Logger.error(`Can´t connect with RabbiMQ Service ${err}`)
         }
     }
 
@@ -29,7 +29,7 @@ class workerQueue {
                 catch(err){ reject(err) }
             });
         }catch(err){
-            Logger.error(`Can´t connect with RabbiMQ Jackpot Service ${err}`)
+            Logger.error(`Can´t connect with RabbiMQ Service ${err}`)
         }
     }
 
@@ -45,7 +45,7 @@ class workerQueue {
                 .catch(err => reject(err))
             });
         }catch(err){
-            Logger.error(`Can´t connect with RabbiMQ Jackpot Service ${err}`)
+            Logger.error(`Can´t connect with RabbiMQ Service ${err}`)
         }
     }
 }
