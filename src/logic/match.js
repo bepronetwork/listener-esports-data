@@ -6,6 +6,7 @@ import { SerieRepository, VideogameRepository, MatchRepository } from '../db/rep
 import { Serie } from '../models';
 import { IOSingleton } from './utils/io';
 import { PANDA_TOKEN } from '../config';
+import {workerQueueSingleton} from "./third-parties/rabbit"
 let error = new ErrorManager();
 
 
@@ -28,6 +29,14 @@ let __private = {};
 const processActions = {
 	__register : async (params) => {
 		return params;
+	},
+	__confirmBets : async (params) => {
+		try {
+			await workerQueueSingleton.sendToQueue("confirmBet", params);
+			return true;
+		} catch(err) {
+			return false;
+		}
 	}
 }
 
@@ -106,6 +115,9 @@ const progressActions = {
 		}catch(err){
 			throw err;
 		}
+	},
+	__confirmBets : async (params) => {
+		return params;
 	}
 }
 
@@ -160,6 +172,9 @@ class MatchLogic extends LogicComponent {
 				case 'Register' : {
 					return library.process.__register(params); break;
 				};
+				case 'ConfirmBets' : {
+					return library.process.__confirmBets(params); break;
+				};
 			}
 		}catch(err){
 			throw err;
@@ -189,6 +204,9 @@ class MatchLogic extends LogicComponent {
 			switch(progressAction) {
 				case 'Register' : {
 					return await library.progress.__register(params);
+				}
+				case 'ConfirmBets' : {
+					return await library.progress.__confirmBets(params);
 				}
 			}
 		}catch(err){
