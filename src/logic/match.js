@@ -2,7 +2,7 @@ const axios = require('axios').default;
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { SerieRepository, VideogameRepository, MatchRepository } from '../db/repos';
+import { SerieRepository, VideogameRepository, MatchRepository, BetEsportsRepository } from '../db/repos';
 import { Serie } from '../models';
 import { IOSingleton } from './utils/io';
 import { PANDA_TOKEN } from '../config';
@@ -32,7 +32,14 @@ const processActions = {
 	},
 	__confirmBets : async (params) => {
 		try {
-			await workerQueueSingleton.sendToQueue("confirmBet", params);
+			const result = (await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}?token=${PANDA_TOKEN}`)).data;
+			if(result.status == "finished") {
+				const match 	     = await MatchRepository.prototype.getByIdExternal(result.id);
+				const listBetEsports = await BetEsportsRepository.prototype.findByMatch(match._id);
+				for(let item of listBetEsports){
+					workerQueueSingleton.sendToQueue("confirmBet", { betEsportId: item._id });
+				}
+			}
 			return true;
 		} catch(err) {
 			return false;
