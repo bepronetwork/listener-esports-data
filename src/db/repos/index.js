@@ -4,6 +4,7 @@ import MatchRepository from './match';
 import SerieRepository from './serie';
 import VideogameRepository from './videogame';
 import BetEsportsRepository from './betEsports';
+import BetResultSpaceRepository from './betResultSpace';
 
 export {
     HelloRepository,
@@ -11,5 +12,6 @@ export {
     MatchRepository,
     SerieRepository,
     VideogameRepository,
-    BetEsportsRepository
+    BetEsportsRepository,
+    BetResultSpaceRepository
 }

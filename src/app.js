@@ -46,9 +46,9 @@ class App {
 
         io.on('connection', (socket) => {
             console.log('Socket ON');
-            socket.on("room", (data) => {
-                socket.join(data.roomId);
-            });
+            // socket.on("room", (data) => {
+            //     socket.join(data.roomId);
+            // });
         });
 
         const self = this;

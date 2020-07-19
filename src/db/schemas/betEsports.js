@@ -7,21 +7,18 @@ class BetEsportsSchema{};
 BetEsportsSchema.prototype.name = 'BetEsports';
 
 BetEsportsSchema.prototype.schema = {
-    betAmount      : { type: Number, required: true},
-    match          : { type: mongoose.Schema.Types.ObjectId, ref: 'Match' },
-    app            : { type: mongoose.Schema.Types.ObjectId, ref: 'App' },
-    user           : { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    currency       : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
-    wallet         : { type: mongoose.Schema.Types.ObjectId, ref: 'Wallet' },
-    market         : { type: mongoose.Schema.Types.ObjectId },
-    selected       : { type: Number, required: true },
-    statistic      : { type: Number, required: true },
-    isWon          : { type: Boolean, required: true, default: false },
-    finished       : { type: Boolean, required: true, default: false},
-    created_at     : { type: Date, required : true},
+    videogames  : [ { type: mongoose.Schema.Types.ObjectId, ref: 'Videogame' } ],
+    betAmount   : { type: Number, required: true },
+    app         : { type: mongoose.Schema.Types.ObjectId, ref: 'App' },
+    user        : { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    currency    : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
+    isWon       : { type: Boolean, required: true, default: false },
+    result      : [{ type : mongoose.Schema.Types.ObjectId, ref: 'BetResult', required : true }],
+    type        : { type: String, required : true },
+    winAmount   : { type : Number, required : true, default: 0 },
 }
 
-BetEsportsSchema.prototype.model = db.model(BetEsportsSchema.prototype.name, new db.Schema(BetEsportsSchema.prototype.schema));
+BetEsportsSchema.prototype.model = db.model(BetEsportsSchema.prototype.name, new db.Schema(BetEsportsSchema.prototype.schema, { timestamps: { createdAt: 'created_at' } }));
 export {
     BetEsportsSchema
 }
