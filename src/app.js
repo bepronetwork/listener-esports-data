@@ -30,6 +30,7 @@ class App {
                         return;
                     }
                     case 'game':{
+                        await Controllers.esport.matchESport(options);
                         getChannel().ack(message);
                         return;
                     }
