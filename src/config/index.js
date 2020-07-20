@@ -7,7 +7,7 @@ export const PORT = process.env.PORT;
 
 export const ENV = process.env.ENV;
 
-export const CLOUDAMQP_URL = `amqp://${encodeURIComponent(process.env.PANDA_EMAIL)}:${process.env.PANDA_TOKEN}@${process.env.PANDA_HOST}:${process.env.PANDA_PORT}/odds%2F${process.env.PANDA_COMPANY_ID}`;
+export const CLOUDAMQP_URL_PANDA = `amqp://${encodeURIComponent(process.env.PANDA_EMAIL)}:${process.env.PANDA_TOKEN}@${process.env.PANDA_HOST}:${process.env.PANDA_PORT}/odds%2F${process.env.PANDA_COMPANY_ID}`;
 
 export const PANDA_TOKEN = process.env.PANDA_TOKEN;
 
@@ -45,7 +45,9 @@ export const MS_WITHDRAW_URL = process.env.MS_WITHDRAW_URL;
 
 export const MS_MASTER_URL = process.env.MS_MASTER_URL;
 
-export const IS_DEVELOPMENT = ENV == 'production' ? false : true; 
+export const RABBIT_URL_QUEUE_BET = process.env.RABBIT_URL_QUEUE_BET || "amqp://guest:guest@localhost:5672/";
+
+export const IS_DEVELOPMENT = ENV == 'production' ? false : true;
 
 export const FRONTEND_BRANCH = !IS_DEVELOPMENT ? 'master' : 'dev';
 

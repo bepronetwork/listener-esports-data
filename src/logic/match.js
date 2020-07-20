@@ -2,10 +2,11 @@ const axios = require('axios').default;
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { SerieRepository, VideogameRepository, MatchRepository } from '../db/repos';
+import { SerieRepository, VideogameRepository, MatchRepository, BetEsportsRepository, BetResultSpaceRepository } from '../db/repos';
 import { Serie } from '../models';
 import { IOSingleton } from './utils/io';
 import { PANDA_TOKEN } from '../config';
+import {workerQueueSingleton} from "./third-parties/rabbit"
 let error = new ErrorManager();
 
 
@@ -28,6 +29,21 @@ let __private = {};
 const processActions = {
 	__register : async (params) => {
 		return params;
+	},
+	__confirmBets : async (params) => {
+		try {
+			const result = (await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}?token=${PANDA_TOKEN}`)).data;
+			if(result.status == "finished") {
+				const match 	    = await MatchRepository.prototype.getByIdExternal(result.id);
+				const listBetResult = await BetResultSpaceRepository.prototype.findByMatch(match._id);
+				for(let item of listBetResult){
+					workerQueueSingleton.sendToQueue("confirmBet", { betResultId: item._id, matchId: match._id, winner: result.winner_id});
+				}
+			}
+			return true;
+		} catch(err) {
+			return false;
+		}
 	}
 }
 
@@ -80,7 +96,7 @@ const progressActions = {
 				.emit("serieUpdate", { message: serie_external_id });
 			}
 			let matchToSalve = null;
-			if(market.markets!="pending") {
+			if(result.status=="pre_match") {
 				// Save match
 				matchToSalve = await self.save({
 					external_id   	: result.id,
@@ -106,6 +122,9 @@ const progressActions = {
 		}catch(err){
 			throw err;
 		}
+	},
+	__confirmBets : async (params) => {
+		return params;
 	}
 }
 
@@ -160,6 +179,9 @@ class MatchLogic extends LogicComponent {
 				case 'Register' : {
 					return library.process.__register(params); break;
 				};
+				case 'ConfirmBets' : {
+					return library.process.__confirmBets(params); break;
+				};
 			}
 		}catch(err){
 			throw err;
@@ -189,6 +211,9 @@ class MatchLogic extends LogicComponent {
 			switch(progressAction) {
 				case 'Register' : {
 					return await library.progress.__register(params);
+				}
+				case 'ConfirmBets' : {
+					return await library.progress.__confirmBets(params);
 				}
 			}
 		}catch(err){
