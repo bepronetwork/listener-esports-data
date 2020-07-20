@@ -25,16 +25,17 @@ class App {
                 switch (options.event_type) {
                     case 'match': {
                         await Controllers.esport.matchESport({...options, match_id: options.event_id});
-                        await Controllers.esport.confirmBets({...options, match_id: options.event_id});
-                        getChannel().ack(true);
-                        break;
+                        // await Controllers.esport.confirmBets({...options, match_id: options.event_id});
+                        getChannel().ack(message);
+                        return;
                     }
                     case 'game':{
-                        await Controllers.esport.matchESport(options);
-                        getChannel().ack(true);
-                        break;
+                        getChannel().ack(message);
+                        return;
                     }
                 }
+                getChannel().ack(message);
+                return;
             });
         });
     }
