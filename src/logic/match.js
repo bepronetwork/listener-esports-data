@@ -96,7 +96,7 @@ const progressActions = {
 				.emit("serieUpdate", { message: serie_external_id });
 			}
 			let matchToSalve = null;
-			if(result.status!="pending") {
+			if(result.status=="pre_match") {
 				// Save match
 				matchToSalve = await self.save({
 					external_id   	: result.id,
