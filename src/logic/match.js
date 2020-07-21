@@ -73,8 +73,13 @@ const progressActions = {
 			const match 					= await MatchRepository.prototype.getByIdExternal(result.id);
 			// Neutral Conditions
 			if(match) {
-				// Call socket
+				// update market
+				if(match.market==null || match.market.length==0) {
+					await MatchRepository.prototype.updateMarketByExternal(result.id, market.markets);
+				}
+				// update status
 				await MatchRepository.prototype.updateByExternal(result.id, result.status);
+				// Call socket
 				IOSingleton.getIO()
 				.emit("matchUpdate", { message: result.id });
 				console.log(result.id);

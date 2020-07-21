@@ -44,6 +44,16 @@ class MatchRepository extends MongoComponent {
             });
         });
     }
+
+    updateMarketByExternal(external_id, market) {
+        return new Promise((resolve, reject)=>{
+            MatchRepository.prototype.schema.model.findOneAndUpdate({external_id}, {market})
+            .exec((error, res)=>{
+                if(error) reject(error);
+                resolve(res);
+            });
+        });
+    }
 }
 
 MatchRepository.prototype.schema = new MatchSchema();
