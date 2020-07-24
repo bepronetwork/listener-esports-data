@@ -34,9 +34,9 @@ class BetResultSpacesRepository extends MongoComponent{
             return new Promise((resolve, reject) => {
                 BetResultSpacesRepository.prototype.schema.model.find({match})
                     .lean()
-                    .exec((err, user) => {
+                    .exec((err, item) => {
                         if (err) { reject(err) }
-                        resolve(user);
+                        resolve(item);
                     });
             });
         } catch (err) {
