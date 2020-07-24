@@ -4,7 +4,7 @@ let db = globals.main_db;
 
 class BetResultSchema{};
 
-BetResultSchema.prototype.name = 'BetResultSpace';
+BetResultSchema.prototype.name = 'BetResult';
 
 BetResultSchema.prototype.schema = {
     match           : { type: mongoose.Schema.Types.ObjectId, ref: 'Match' },

@@ -1,6 +1,5 @@
 import { globals } from './Globals';
 import { Logger } from './helpers/logger';
-import { QueueSingleton } from './logic/queue/queue';
 import { IOSingleton } from './logic/utils/io';
 require('dotenv').config();
 const app = require('express')();
@@ -25,12 +24,13 @@ class App {
                 switch (options.event_type) {
                     case 'match': {
                         await Controllers.esport.matchESport({...options, match_id: options.event_id});
-                        // await Controllers.esport.confirmBets({...options, match_id: options.event_id});
+                        await Controllers.esport.confirmBets({...options, match_id: options.event_id});
                         getChannel().ack(message);
                         return;
                     }
                     case 'game':{
                         await Controllers.esport.matchESport(options);
+                        await Controllers.esport.confirmBets(options);
                         getChannel().ack(message);
                         return;
                     }
