@@ -5,6 +5,8 @@ import { VideogameSchema } from "./videogame";
 import { LogSchema }  from './log';
 import { BetEsportsSchema }  from './betEsports';
 import { BetResultSchema }  from './betResult';
+import { BookedMatchSchema }  from './bookedMatch';
+import { AppSchema }  from './app';
 
 export {
     HelloSchema,
@@ -13,5 +15,7 @@ export {
     SerieSchema,
     VideogameSchema,
     BetEsportsSchema,
-    BetResultSchema
+    BetResultSchema,
+    BookedMatchSchema,
+    AppSchema,
 }

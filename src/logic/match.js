@@ -7,6 +7,7 @@ import { Serie } from '../models';
 import { IOSingleton } from './utils/io';
 import { PANDA_TOKEN } from '../config';
 import {workerQueueSingleton} from "./third-parties/rabbit"
+import { AppSchema, BookedMatchSchema } from '../db/schemas';
 let error = new ErrorManager();
 
 
@@ -76,6 +77,27 @@ const progressActions = {
 				// update market
 				if(match.market==null || match.market.length==0) {
 					await MatchRepository.prototype.updateMarketByExternal(result.id, market.markets);
+				}
+
+				// Update all odds of book
+				let listBooked = await BookedMatchSchema.prototype.model.find({external_match: params.match_id}).exec();
+				let oddWinnerTwoWay   = match.market.find((m) => m.template == "winner-2-way");
+                	oddWinnerTwoWay   = oddWinnerTwoWay==null ? [] : oddWinnerTwoWay.selections;
+				let oddWinnerThreeWay = match.market.find((m) => m.template == "winner-3-way");
+					oddWinnerThreeWay = oddWinnerThreeWay==null ? [] : oddWinnerThreeWay.selections;
+				for(let booked of listBooked){
+					let app = await AppSchema.prototype.model.findById(booked.app).exec();
+					console.log("Booked ", booked._id);
+					await BookedMatchSchema.prototype.model.findOneAndUpdate({_id: booked._id},{$set: {
+						odds: {
+							winnerTwoWay    : oddWinnerTwoWay.map((res)=>{ return {...res, probability: res.probability - app.esports_edge*0.01 } }),
+							winnerThreeWay  : oddWinnerThreeWay.map((res)=>{ return {...res, probability: res.probability - app.esports_edge*0.01 } })
+						}
+					}}).exec();
+					console.log("Booked 2 ",{ odds: {
+						winnerTwoWay    : oddWinnerTwoWay.map((res)=>{ return {...res, probability: res.probability - app.esports_edge*0.01 } }),
+						winnerThreeWay  : oddWinnerThreeWay.map((res)=>{ return {...res, probability: res.probability - app.esports_edge*0.01 } })
+					}});
 				}
 				// update status
 				await MatchRepository.prototype.updateByExternal(result.id, result.status);
