@@ -3,7 +3,7 @@ import Web3 from 'web3';
 import CasinoContract from "./logic/eth/CasinoContract";
 import interfaces from "./logic/eth/interfaces";
 import ERC20TokenContract from "./logic/eth/ERC20Contract";
-import { ETH_NETWORK, ETH_NET_NAME, DB_MONGO } from './config';
+import { ETH_NETWORK, ETH_NET_NAME, MONGO_CONNECTION_STRING, TIMEOUT_MONGO_MS } from './config';
 import { IPRunning } from "./helpers/network";
 import { Logger } from "./helpers/logger";
 import bluebird from 'bluebird';
@@ -77,27 +77,29 @@ class Globals{
         Logger.info(`IP`, `${IPRunning()}`);
     }
 
-    async startDatabase(){      
+    async startDatabase(){
         // Main DB
         this.main_db = new Mongoose();
         this.main_db.set('useFindAndModify', false);
-        await this.main_db.connect(DB_MONGO.connection_string + DB_MONGO.dbs.main, { useNewUrlParser: true, useUnifiedTopology: true});
+        await this.main_db.connect(`${MONGO_CONNECTION_STRING}/main?ssl=true&authSource=admin&retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true});
+        this.main_db.set('maxTimeMS', !TIMEOUT_MONGO_MS ? (15*1000) : (TIMEOUT_MONGO_MS*1000));
         this.main_db.Promise = bluebird;
         // Ecosystem DB
         this.ecosystem_db = new Mongoose();
         this.ecosystem_db.set('useFindAndModify', false);
-        await this.ecosystem_db.connect(DB_MONGO.connection_string + DB_MONGO.dbs.ecosystem, { useNewUrlParser: true, useUnifiedTopology: true});
+        await this.ecosystem_db.connect(`${MONGO_CONNECTION_STRING}/ecosystem?ssl=true&authSource=admin&retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true});
+        this.ecosystem_db.set('maxTimeMS', !TIMEOUT_MONGO_MS ? (15*1000) : (TIMEOUT_MONGO_MS*1000));
         this.ecosystem_db.Promise = bluebird;
         // Redis DB
         this.redis_db = new Mongoose();
         this.redis_db.set('useFindAndModify', false);
-        await this.redis_db.connect(DB_MONGO.connection_string + DB_MONGO.dbs.redis, { useNewUrlParser: true, useUnifiedTopology: true});
+        await this.redis_db.connect(`${MONGO_CONNECTION_STRING}/redis?ssl=true&authSource=admin&retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true});
+        this.redis_db.set('maxTimeMS', !TIMEOUT_MONGO_MS ? (15*1000) : (TIMEOUT_MONGO_MS*1000));
         this.redis_db.Promise = bluebird;
         // Main DB
         this.default = new Mongoose();
         this.default.Promise = bluebird;
         return true;
-        
     }
 }
 
