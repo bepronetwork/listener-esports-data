@@ -11,7 +11,7 @@ BetResultSchema.prototype.schema = {
     marketType      : { type: String, required: true },
     betType         : { type: Number, required: true },
     participantId   : { type: Number, required: true },
-    statistic       : { type: Number, required: true },
+    odd             : { type: Number, required: true },
     finished        : { type: Boolean, required: true, default: false },
     status          : { type: String, required: true, default: "pending" } // pending, gain or loss
 };
