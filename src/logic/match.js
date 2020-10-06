@@ -90,8 +90,14 @@ const progressActions = {
 					console.log("Booked ", booked._id);
 					await BookedMatchSchema.prototype.model.findOneAndUpdate({_id: booked._id},{$set: {
 						odds: {
-							winnerTwoWay    : oddWinnerTwoWay.map((res)=>{ return {...res, odd: parseFloat((1/res.probability) - ((1/res.probability) * (app.esports_edge*0.01))).toFixed(2) } }),
-							winnerThreeWay  : oddWinnerThreeWay.map((res)=>{ return {...res, odd: parseFloat((1/res.probability) - ((1/res.probability) * (app.esports_edge*0.01))).toFixed(2) } })
+							winnerTwoWay    : oddWinnerTwoWay.map((res)=>{
+								let resOdd = parseFloat((1/res.probability) - ((1/res.probability) * (app.esports_edge*0.01))).toFixed(2);
+								return {...res, odd: resOdd <=1 ? 1.01 : resOdd}
+							}),
+							winnerThreeWay  : oddWinnerThreeWay.map((res)=>{
+								let resOdd = parseFloat((1/res.probability) - ((1/res.probability) * (app.esports_edge*0.01))).toFixed(2);
+								return {...res, odd: resOdd <=1 ? 1.01 : resOdd}
+							})
 						}
 					}}).exec();
 					console.log("Booked 2 ",{ odds: {
