@@ -90,13 +90,13 @@ const progressActions = {
 					console.log("Booked ", booked._id);
 					await BookedMatchSchema.prototype.model.findOneAndUpdate({_id: booked._id},{$set: {
 						odds: {
-							winnerTwoWay    : oddWinnerTwoWay.map((res)=>{ return {...res, probability: res.probability - app.esports_edge*0.01 } }),
-							winnerThreeWay  : oddWinnerThreeWay.map((res)=>{ return {...res, probability: res.probability - app.esports_edge*0.01 } })
+							winnerTwoWay    : oddWinnerTwoWay.map((res)=>{ return {...res, odds: parseFloat((1/res.probability) - ((1/res.probability) * (app.esports_edge*0.01))).toFixed(2) } }),
+							winnerThreeWay  : oddWinnerThreeWay.map((res)=>{ return {...res, odds: parseFloat((1/res.probability) - ((1/res.probability) * (app.esports_edge*0.01))).toFixed(2) } })
 						}
 					}}).exec();
 					console.log("Booked 2 ",{ odds: {
-						winnerTwoWay    : oddWinnerTwoWay.map((res)=>{ return {...res, probability: res.probability - app.esports_edge*0.01 } }),
-						winnerThreeWay  : oddWinnerThreeWay.map((res)=>{ return {...res, probability: res.probability - app.esports_edge*0.01 } })
+						winnerTwoWay    : oddWinnerTwoWay.map((res)=>{ return {...res, odds: parseFloat((1/res.probability) - ((1/res.probability) * (app.esports_edge*0.01))).toFixed(2) } }),
+						winnerThreeWay  : oddWinnerThreeWay.map((res)=>{ return {...res, odds: parseFloat((1/res.probability) - ((1/res.probability) * (app.esports_edge*0.01))).toFixed(2) } })
 					}});
 				}
 				// update status
