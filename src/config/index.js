@@ -7,7 +7,9 @@ export const PORT = process.env.PORT;
 
 export const ENV = process.env.ENV;
 
-export const CLOUDAMQP_URL = `amqp://${encodeURIComponent(process.env.PANDA_EMAIL)}:${process.env.PANDA_TOKEN}@${process.env.PANDA_HOST}:${process.env.PANDA_PORT}/odds%2F${process.env.PANDA_COMPANY_ID}`;
+export const CLOUDAMQP_URL_PANDA = `amqp://${encodeURIComponent(process.env.PANDA_EMAIL)}:${process.env.PANDA_TOKEN}@${process.env.PANDA_HOST}:${process.env.PANDA_PORT}/odds%2F${process.env.PANDA_COMPANY_ID}`;
+
+export const PANDA_TOKEN = process.env.PANDA_TOKEN;
 
 export const DB_USER =  process.env.DB_USER;
 
@@ -43,7 +45,9 @@ export const MS_WITHDRAW_URL = process.env.MS_WITHDRAW_URL;
 
 export const MS_MASTER_URL = process.env.MS_MASTER_URL;
 
-export const IS_DEVELOPMENT = ENV == 'production' ? false : true; 
+export const RABBIT_URL_QUEUE_BET = process.env.RABBIT_URL_QUEUE_BET || "amqp://guest:guest@localhost:5672/";
+
+export const IS_DEVELOPMENT = ENV == 'production' ? false : true;
 
 export const FRONTEND_BRANCH = !IS_DEVELOPMENT ? 'master' : 'dev';
 
@@ -72,22 +76,13 @@ export const IS_LOCAL_DEV = process.env.IS_LOCAL_DEV;
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 
+export const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
+
+export const TIMEOUT_MONGO_MS = process.env.TIMEOUT_MONGO_MS;
+
 /* Variables */
 
 var ETH_NETWORK = config.eth;
-
-var DB_MONGO = config.mongo;
-
-/**
- * @function SET_ENV
- */
-
-
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'DB_USER', DB_USER);
-
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'DB_PASSWORD', DB_PASSWORD);
-        
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'MONGO_ID', MONGO_ID);
 
 if(ETH_RPC_URL){
     ETH_NETWORK = ETH_RPC_URL
@@ -97,6 +92,5 @@ if(ETH_RPC_URL){
 }
 
 export {
-    ETH_NETWORK,
-    DB_MONGO
+    ETH_NETWORK
 }

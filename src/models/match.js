@@ -31,6 +31,15 @@ class Match extends ModelComponent {
             throw err;
         }
     }
+
+    async confirmBets() {
+        try {
+            return await this.process('ConfirmBets');
+            // return MapperMatchSingleton.output('Match', res);
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 export default Match;

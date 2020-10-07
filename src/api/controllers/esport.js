@@ -1,4 +1,3 @@
-import MiddlewareSingleton from '../helpers/middleware';
 import { Match } from '../../models';
 
 /**
@@ -15,12 +14,22 @@ import { Match } from '../../models';
 async function matchESport(params) {
     try {
         let match = new Match(params);
-        await match.register();
+        return await match.register();
     } catch (err) {
-        console.log(err);
+        return err;
+    }
+}
+
+async function confirmBets(params) {
+    try {
+        let match = new Match(params);
+        return await match.confirmBets();
+    } catch (err) {
+        return err;
     }
 }
 
 export default {
+    confirmBets,
     matchESport
 }

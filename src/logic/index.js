@@ -4,6 +4,8 @@ import LogLogic from './log';
 import MatchLogic from "./match";
 import SerieLogic from "./serie";
 import VideogameLogic from "./videogame";
+import BetResultSpaceLogic from "./betResultSpace";
+
 
 
 export {
@@ -12,5 +14,6 @@ export {
     MatchLogic,
     SerieLogic,
     VideogameLogic,
+    BetResultSpaceLogic
 }
 

@@ -5,6 +5,7 @@ build
 .env.production
 .env.local
 env.dmg
+package-lock.json
 
 test/outputs
 /test/outputs
