@@ -1,8 +1,8 @@
-import { CLOUDAMQP_URL_PANDA } from './config';
+import { RABBIT_URL_QUEUE_BET } from './config';
 const amqplib = require('amqplib');
 var channelLocal = null;
 function connect(){
-    return amqplib.connect(CLOUDAMQP_URL_PANDA).then(conn => conn.createChannel());
+    return amqplib.connect(RABBIT_URL_QUEUE_BET).then(conn => conn.createChannel());
   }
   function createQueue(channel, queue){
     return new Promise((resolve, reject) => {
