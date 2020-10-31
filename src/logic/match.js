@@ -75,9 +75,7 @@ const progressActions = {
 			// Neutral Conditions
 			if(match) {
 				// update market
-				if(match.market==null || match.market.length==0) {
-					await MatchRepository.prototype.updateMarketByExternal(result.id, market.markets);
-				}
+				await MatchRepository.prototype.updateMarketByExternal(result.id, market.markets);
 
 				// Update all odds of book
 				let listBooked = await BookedMatchSchema.prototype.model.find({external_match: params.match_id}).exec();
