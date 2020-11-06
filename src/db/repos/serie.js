@@ -36,6 +36,15 @@ class SerieRepository extends MongoComponent {
             });
         });
     }
+    updateData(_id, data){
+        return new Promise((resolve, reject)=>{
+            SerieRepository.prototype.schema.model.findOneAndUpdate({_id}, data)
+            .exec((error, res)=>{
+                if(error) reject(error);
+                resolve(res);
+            });
+        });
+    }
 }
 
 SerieRepository.prototype.schema = new SerieSchema();

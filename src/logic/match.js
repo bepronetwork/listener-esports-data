@@ -125,6 +125,15 @@ const progressActions = {
 				// Call socket
 				IOSingleton.getIO()
 				.emit("serieUpdate", { message: serie_external_id });
+			} else {
+				await SerieRepository.prototype.updateData(serie_id,
+					{
+						...seriesPanda,
+						external_id		: serie_external_id,
+						videogame_id	: videogame_external_id,
+						videogame 		: videogame_id
+					}
+				);
 			}
 			let matchToSalve = null;
 			if(result.status=="pre_match") {
