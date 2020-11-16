@@ -75,9 +75,7 @@ const progressActions = {
 			// Neutral Conditions
 			if(match) {
 				// update market
-				if(match.market==null || match.market.length==0) {
-					await MatchRepository.prototype.updateMarketByExternal(result.id, market.markets);
-				}
+				await MatchRepository.prototype.updateMarketByExternal(result.id, market.markets);
 
 				// Update all odds of book
 				let listBooked = await BookedMatchSchema.prototype.model.find({external_match: params.match_id}).exec();
@@ -127,6 +125,15 @@ const progressActions = {
 				// Call socket
 				IOSingleton.getIO()
 				.emit("serieUpdate", { message: serie_external_id });
+			} else {
+				await SerieRepository.prototype.updateData(serie_id,
+					{
+						...seriesPanda,
+						external_id		: serie_external_id,
+						videogame_id	: videogame_external_id,
+						videogame 		: videogame_id
+					}
+				);
 			}
 			let matchToSalve = null;
 			if(result.status=="pre_match") {
